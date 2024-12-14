@@ -1,54 +1,21 @@
-# from django.shortcuts import render , redirect
-# from .models import NewTask
-
-# # Create your views here.
-# def saveinfo(request):
-#   if request.method=='POST':
-#     AddTask=request.POST('addtask')
-#     time=request.POST('time')
-#     add=NewTask(AddTask=AddTask,time=time)
-#     add.save()
-#   Add=NewTask.objects.all()
-#   return render(request,'index.html',{'Add':Add})
-
-# def index(request):
-#   Add=NewTask.objects.all()
-#   return render(request,'index.html',{'Add':Add})
-
-# def Delete(rerquest,id):
-#   New=NewTask.objects.get(id=id)
-#   New.delete()
-#   return redirect('/')
-
-
 from django.shortcuts import render, redirect
-from .models import NewTask
-
-# Create your views here.
-def save_task(request):
-    if request.method == 'POST':
-        add_task = request.POST.get('addtask')  # Use .get() to avoid errors if key is missing
-        time = request.POST.get('time')
-        if add_task and time:  # Validate that both fields are provided
-            new_task = NewTask(AddTask=add_task, time=time)
-            new_task.save()
-        return redirect('/')  # Redirect after saving to prevent form resubmission
-    
-    tasks = NewTask.objects.all()
-    return render(request, 'index.html', {'tasks': tasks})  # Pass tasks for rendering
+from .models import Task
 
 def index(request):
-    tasks = NewTask.objects.all()
+    if request.method == 'POST':
+        # Get task details from form
+        task_name = request.POST.get('task_name')
+        task_time = request.POST.get('task_time')
+        if task_name and task_time:
+            Task.objects.create(task_name=task_name, time=task_time)
+
+    tasks = Task.objects.all()  # Fetch all tasks
     return render(request, 'index.html', {'tasks': tasks})
 
-def delete_task(request, id):
+def delete_task(request, task_id):
     try:
-        task = NewTask.objects.get(id=id)
+        task = Task.objects.get(id=task_id)
         task.delete()
-    except NewTask.DoesNotExist:
-        pass  # Optionally handle the case where the task does not exist
+    except Task.DoesNotExist:
+        pass
     return redirect('/')
-
-
-
-                    

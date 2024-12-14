@@ -7,129 +7,115 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        background-color: #ffa500; /* Orange background */
-        margin: 0;
+
+        background-image: url("https://static.vecteezy.com/system/resources/previews/009/258/310/large_2x/set-of-to-do-list-template-with-hand-drawn-watercolor-leaf-illustration-background-vector.jpg");
+        background-repeat: no-repeat;
+        /* background-size: contain; */
+        background-position: center;
+      }
+      .container {
+        margin: auto;
         padding: 20px;
+        width: 40%;
+        background: white;
+        border-radius: 10px;
+      }
+
+      .container h1 {
         text-align: center;
-
-        background-image: url("https://static.vecteezy.com/system/resources/previews/009/258/310/large_2x/set-of-to-do-list-template-with-hand-drawn-watercolor-leaf-illustration-background-vector.jpg"); /* Specify the image file */
-        background-repeat: no-repeat; /* Prevent tiling */
-        background-size: cover; /* Resize the image to cover the entire container */
-        background-position: center; /* Center the image */
       }
-
-      h1 {
-        color: black;
-      }
-
-      .form-container {
-        margin-bottom: 20px;
-      }
-
-      .form-container input[type="text"],
-      .form-container input[type="time"] {
-        padding: 8px;
-        margin: 5px;
-        font-size: 16px;
-      }
-
-      .form-container button {
-        padding: 10px 15px;
-        font-size: 16px;
-        background-color: pink;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-
-      .form-container button:hover {
-        background-color: pink;
-      }
-
       table {
-        width: 80%;
-        margin: 0 auto;
-        border-collapse: collapse;
+        margin: 20px auto; /* Centers the table horizontally */
+        border-collapse: collapse; /* Removes extra spaces between table cells */
+        width: 80%; /* Adjust the width as needed */
+        text-align: center;
       }
-
       table,
       th,
       td {
-        border: 1px solid;
+        border: 1px solid black;
       }
-
-      th,
-      td {
-        padding: 10px;
-        text-align: center;
-      }
-
       th {
-        background-color: pink;
+        background: pink;
         color: white;
       }
-
       td {
-        background-color: white;
+        background: white;
       }
-
-      a {
-        color: red;
+      form {
+        margin-bottom: 20px;
+      }
+      form input[type="text"],
+      form input[type="time"] {
+        padding: 10px;
+        font-size: 16px;
+        margin-right: 10px;
+      }
+      form button {
+        padding: 10px;
+        font-size: 16px;
+        background: pink;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .delete-link {
+        color: rgb(247, 117, 117);
         text-decoration: none;
-        font-weight: bold;
       }
-
-      a:hover {
-        text-decoration: underline;
+      table {
+        width: 500px;
+        text-align: center;
       }
     </style>
   </head>
   <body>
-    <h1>Task Manager</h1>
-
-    <!-- Task Addition Form -->
-    <div class="form-container">
-      <form method="POST" action="{% url 'save_task' %}">
+    <div class="container">
+      <h1>Task Manager</h1>
+      <form method="POST" action="">
         {% csrf_token %}
-        <label for="addtask">Add Task:</label>
+        <label for="task_name">Add Task:</label>
         <input
           type="text"
-          name="addtask"
-          id="addtask"
+          id="task_name"
+          name="task_name"
           placeholder="Add Task"
           required
         />
-        <label for="time">Add Time:</label>
-        <input type="time" name="time" id="time" required />
+        <label for="task_time">Add Time:</label>
+        <input type="time" id="task_time" name="task_time" required />
         <button type="submit">Add</button>
       </form>
-    </div>
-
-    <!-- Task Table -->
-    <table>
-      <thead>
+      <table>
         <tr>
           <th>Tasks</th>
           <th>Time</th>
           <th>Status</th>
           <th>Delete</th>
         </tr>
-      </thead>
-      <tbody>
-        {% for task in Add %}
+        {% for task in tasks %}
         <tr>
-          <td>{{ task.AddTask }}</td>
-          <td>{{ task.time }}</td>
-          <td><input type="checkbox" /></td>
-          <td><a href="{% url 'Delete' task.id %}">Delete</a></td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="4">No tasks added yet.</td>
+          <td>{{ task.task_name }}</td>
+          <td>{{ task.time|time:"h:i a" }}</td>
+          <td>
+            <input
+              type="checkbox"
+              {%
+              if
+              task.is_completed
+              %}checked{%
+              endif
+              %}
+            />
+          </td>
+          <td>
+            <a href="{% url 'delete_task' task.id %}" class="delete-link"
+              >Delete</a
+            >
+          </td>
         </tr>
         {% endfor %}
-      </tbody>
-    </table>
+      </table>
+    </div>
   </body>
 </html>

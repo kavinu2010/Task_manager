@@ -1,8 +1,9 @@
 from django.db import models
-from datetime import timezone
-import datetime
 
-# Create your models here.
-class NewTask(models.Model):
-  AddTask=models.CharField(max_length=30)
-  time=models.TimeField(auto_now=False, auto_now_add=False)
+class Task(models.Model):
+    task_name = models.CharField(max_length=255)  # Task title
+    time = models.TimeField()  # Time for the task
+    is_completed = models.BooleanField(default=False)  # Status (completed or not)
+
+    def __str__(self):
+        return self.task_name
