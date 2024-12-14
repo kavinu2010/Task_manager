@@ -1,0 +1,8 @@
+from django.contrib import admin
+
+# Register your models here.
+from .models import NewTask
+
+class NewTaskAdmin(admin.ModelAdmin):
+  list_display=('AddTask','time')
+admin.site.register(NewTask,NewTaskAdmin)
